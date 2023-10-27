@@ -1,39 +1,40 @@
 package ee.rebecca.hilowgame;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Deck {
-    private List<Card> cards;
 
-    public Deck() {
-        cards = new ArrayList<>();
-        initializeDeck();
-        shuffle();
-    }
+    private final Card[] deck;
+    private int cardsUsed;
 
-    private void initializeDeck() {
-        for (Suit suit : Suit.values()) {
-            for (Rank rank : Rank.values()) {
-                cards.add(new Card(suit, rank));
+
+    public Deck(){
+        deck = new Card[52];
+        for (Suits suit : Suits.values()){
+            for (Ranks rank: Ranks.values()){
+                for(int i=0; i<3; i++){
+                    deck[i++] = new Card(rank, suit);
+                }
             }
         }
+        cardsUsed = 0;
     }
 
-    public void shuffle() {
-        Collections.shuffle(cards);
-    }
+    //SHUFFLE
 
-    public Card drawCard() {
-        if (!cards.isEmpty()) {
-            return cards.remove(0);
-        } else {
-            // Handle the case when the deck is empty, possibly reshuffle the deck or end the game
-            return null;
+
+
+    public void shuffle(){
+        Card tempDeck;
+        for (int i = 0; i < deck.length; i++) {
+            int index = (int) (Math.random() * deck.length);
+
+            tempDeck = deck[i];
+            deck[i] = deck[index];
+            deck[index] = tempDeck;
         }
     }
 
-    public boolean isEmpty() {
-        return cards.isEmpty();
+    public Card dealCard(){
+        return deck[cardsUsed++];
     }
 }

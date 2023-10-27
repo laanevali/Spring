@@ -1,13 +1,21 @@
 package ee.rebecca.salat.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Getter
 @AllArgsConstructor
+@Entity
+@NoArgsConstructor
 public class Toit {
+    @Id
     private String nimetus;
+    @ManyToMany
     private List<Toidukomponent> toidukomponendid;
     public double saaValgud(){
         double valgud = 0;

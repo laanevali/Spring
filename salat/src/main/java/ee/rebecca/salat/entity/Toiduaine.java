@@ -1,12 +1,17 @@
 package ee.rebecca.salat.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
-
+@Entity // <--- tekib andmebaasi selle classi nimetusega tabel
+@NoArgsConstructor
 public class Toiduaine {
-    private String nimetus;
+    @Id
+    private String nimetus; // primaarvõti ehk selle abil kustutame ja muudame
     private double valgud;
     private double rasvad;
     private double sysivesikud;

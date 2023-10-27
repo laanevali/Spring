@@ -3,10 +3,11 @@ package ee.rebecca.salat.controller;
 import ee.rebecca.salat.entity.Toiduaine;
 import ee.rebecca.salat.entity.Toidukomponent;
 import ee.rebecca.salat.entity.Toit;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import ee.rebecca.salat.repository.ToiduaineRepository;
+import ee.rebecca.salat.repository.ToidukomponentRepository;
+import ee.rebecca.salat.repository.ToitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,9 +15,15 @@ import java.util.ArrayList;
 @RestController
 // StudyController PersonController RoomController
 public class SaladController {
-    List<Toiduaine> toiduained = new ArrayList<>();
-
-    @GetMapping("lisa-toiduaine") // localhost:8080/lisa-toiduaine
+    @Autowired
+    ToiduaineRepository toiduaineRepository;
+    //LISTI ASEMEL ANDMEBAAS
+    //List<Toiduaine> toiduained = new ArrayList<>();
+    @Autowired
+    ToidukomponentRepository toidukomponentRepository;
+    @Autowired
+    ToitRepository toitRepository;
+    @PostMapping("lisa-toiduaine") // localhost:8080/lisa-toiduaine
     public List<Toiduaine> lisaToiduaine(
             @RequestParam String nimetus,
             @RequestParam double valgud,
@@ -24,81 +31,87 @@ public class SaladController {
             @RequestParam double sysivesikud
     ) throws Exception {
         Toiduaine toiduaine = new Toiduaine(nimetus, valgud, rasvad, sysivesikud);
-        toiduained.add(toiduaine);
+        //toiduained.add(toiduaine);
+        toiduaineRepository.save(toiduaine);
         System.out.println("Toiduaine lisatud!");
-        return toiduained;
+        return toiduaineRepository.findAll();
     }
 
-    List<Toidukomponent> toidukomponendid = new ArrayList<>();
 
-    @GetMapping("lisa-toidukomponent")
+
+    @PostMapping("lisa-toidukomponent")
     public List<Toidukomponent> lisaToidukomponent(
             @RequestParam String toiduaineNimetus,
             @RequestParam int kogus
     ) throws Exception {
         // lähen otsin toiduaineNimetuse alusel toiduainete listist õige üles
-        Toiduaine toiduaine = null;
-        for (Toiduaine t: toiduained){
-            if (t.getNimetus().equals(toiduaineNimetus)) {
-                toiduaine = t;
-                break;
-            }
-        }
-        if(toiduaine == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
-        Toidukomponent toidukomponent = new Toidukomponent(toidukomponendid.size()+1, toiduaine, kogus);
-        toidukomponendid.add(toidukomponent);
-        return toidukomponendid;
+//        Toiduaine toiduaine = null;
+//        for (Toiduaine t: toiduained){
+//            if (t.getNimetus().equals(toiduaineNimetus)) {
+//                toiduaine = t;
+//                break;
+//            }
+//        }
+//        if(toiduaine == null) {
+//            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
+//        }
+        Toiduaine toiduaine = toiduaineRepository.findById(toiduaineNimetus).get();
+                                                            // TODO: muuta id
+        Toidukomponent toidukomponent = new Toidukomponent(1, toiduaine, kogus);
+        toidukomponentRepository.save(toidukomponent);
+        return toidukomponentRepository.findAll();
     }
 
     @GetMapping("saa-toidukomponendi-rasvad1/{id}")
     public double saaToidukompunendiRasvad1(@PathVariable int id) throws Exception {
-        Toidukomponent toidukomponent = null;
-        for (Toidukomponent t: toidukomponendid){
-            if (t.getId() == id) {
-                toidukomponent = t;
-                break;
-            }
-        }
-        if(toidukomponent == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
+//        Toidukomponent toidukomponent = null;
+//        for (Toidukomponent t: toidukomponendid){
+//            if (t.getId() == id) {
+//                toidukomponent = t;
+//                break;
+//            }
+//        }
+//        if(toidukomponent == null) {
+//            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
+//        }
+        Toidukomponent toidukomponent = toidukomponentRepository.findById(id).get();
         return toidukomponent.getKogus() * toidukomponent.getToiduaine().getRasvad() / 100;
     }
     @GetMapping("saa-toidukomponendi-rasvad2/")
     public double saaToidukompunendiRasvad2(@RequestParam String toiduaineNimetus,
                                             @RequestParam int kogus
     ) throws Exception {
-        Toiduaine toiduaine = null;
-        for (Toiduaine t: toiduained){
-            if (t.getNimetus().equals(toiduaineNimetus)) {
-                toiduaine = t;
-                break;
-            }
-        }
-        if(toiduaine == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
-
+//        Toiduaine toiduaine = null;
+//        for (Toiduaine t: toiduained){
+//            if (t.getNimetus().equals(toiduaineNimetus)) {
+//                toiduaine = t;
+//                break;
+//            }
+//        }
+//        if(toiduaine == null) {
+//            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
+//        }
+        Toiduaine toiduaine = toiduaineRepository.findById(toiduaineNimetus).get();
         return kogus * toiduaine.getRasvad() / 100;
     }
-    List<Toit> toidud = new ArrayList<>();
-    @GetMapping("lisa-toit")
+//    List<Toit> toidud = new ArrayList<>();
+    @PostMapping("lisa-toit")
     public List<Toit> lisaToit(
             @RequestParam String nimetus,
-            @RequestParam int[] toidukomponentideIds
+            @RequestParam Integer[] toidukomponentideIds
     ) {
-        List<Toidukomponent> toiduosad = new ArrayList<>();
-        for (int id: toidukomponentideIds){
-            for (Toidukomponent t: toidukomponendid){
-                if (id == t.getId()){
-                    toiduosad.add(t);
-                }
-            }
-        }
-        Toit toit = new Toit(nimetus,toiduosad);
-        toidud.add(toit);
+//        List<Toidukomponent> toiduosad = new ArrayList<>();
+//        for (int id: toidukomponentideIds){
+//            for (Toidukomponent t: toidukomponendid){
+//                if (id == t.getId()){
+//                    toiduosad.add(t);
+//                }
+//            }
+//        }
+        List<Toidukomponent> toiduosad = toidukomponentRepository.findAllById(List.of(toidukomponentideIds));
+                Toit toit = new Toit(nimetus,toiduosad);
+//        toidud.add(toit);
+        toitRepository.save(toit);
         return toidud;
     }
 
@@ -106,67 +119,53 @@ public class SaladController {
     public double saaToiduValgud (
             @RequestParam String nimetus
     ) throws Exception {
-        Toit toit = null;
-        for (Toit t: toidud){
-            if (t.getNimetus().equals(nimetus)) {
-                toit = t;
-                break;
-            }
-        }
-        if(toit == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
+//        Toit toit = null;
+//        for (Toit t: toidud){
+//            if (t.getNimetus().equals(nimetus)) {
+//                toit = t;
+//                break;
+//            }
+//        }
+//        if(toit == null) {
+//            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
+//        }
+        Toit toit = toitRepository.findById(nimetus).get();
         return toit.saaValgud();
     }
     @GetMapping("saa-toidu-rasvad")
     public double saaToiduRasvad (
             @RequestParam String nimetus
     ) throws Exception {
-        Toit toit = null;
-        for (Toit t: toidud){
-            if (t.getNimetus().equals(nimetus)) {
-                toit = t;
-                break;
-            }
-        }
-        if(toit == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
+//        Toit toit = null;
+//        for (Toit t: toidud){
+//            if (t.getNimetus().equals(nimetus)) {
+//                toit = t;
+//                break;
+//            }
+//        }
+//        if(toit == null) {
+//            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
+//        }
+        Toit toit = toitRepository.findById(rasvad).get();
         return toit.saaRasvad();
     }
     @GetMapping("saa-toidu-sysivesikud")
     public double saaToiduSysivesikud (
             @RequestParam String nimetus
     ) throws Exception {
-        Toit toit = null;
-        for (Toit t: toidud){
-            if (t.getNimetus().equals(nimetus)) {
-                toit = t;
-                break;
-            }
-        }
-        if(toit == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
+//        Toit toit = null;
+//        for (Toit t: toidud){
+//            if (t.getNimetus().equals(nimetus)) {
+//                toit = t;
+//                break;
+//            }
+//        }
+//        if(toit == null) {
+//            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
+//        }
+        Toit toit = toitRepository.findById(nimetus).get();
         return toit.saaSysivesikud();
     }
-    @GetMapping("saa-toiduaine")
-    public Toiduaine saaToiduaine (@RequestParam String nimetus) throws Exception {
-        Toiduaine toiduaine = null;
-        for (Toiduaine t: toiduained){
-            if (t.getNimetus().equals(toiduaineNimetus)) {
-                toiduaine = t;
-                break;
-            }
-        }
-        if(toiduaine == null) {
-            throw new Exception("Sellise nimetusega toiduainet ei eksisteeri!");
-        }
-        Toidukomponent toidukomponent = new Toidukomponent(toidukomponendid.size()+1, toiduaine, kogus);
-        toidukomponendid.add(toidukomponent);
-        return toidukomponendid;
 
-
-    }
 }
 
