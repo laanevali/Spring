@@ -1,4 +1,7 @@
-package ee.rebecca.hilowgame;
+package ee.rebecca.hilowgame.entity;
+
+import lombok.Getter;
+
 
 public enum Suits {
     SPADES("SPADES"), HEARTS("HEARTS"), CLUBS("CLUBS"), DIAMONDS("DIAMONDS");

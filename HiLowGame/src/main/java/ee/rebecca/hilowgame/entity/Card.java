@@ -1,7 +1,8 @@
-package ee.rebecca.hilowgame;
+package ee.rebecca.hilowgame.entity;
 
-import java.util.ArrayList;
+import lombok.Getter;
 
+@Getter
 public class Card {
     private String suit;
     private String rank_name;

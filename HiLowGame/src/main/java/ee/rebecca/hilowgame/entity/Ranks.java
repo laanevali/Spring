@@ -1,4 +1,4 @@
-package ee.rebecca.hilowgame;
+package ee.rebecca.hilowgame.entity;
 
 import lombok.Getter;
 

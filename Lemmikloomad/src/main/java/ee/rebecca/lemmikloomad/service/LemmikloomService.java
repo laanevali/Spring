@@ -13,7 +13,7 @@ public class LemmikloomService {
     @Autowired
     OmanikRepository omanikRepository;
 
-    public Lemmikloom getLemmikloom(String kumbaPidi, String Omanikunimi){
+    public Lemmikloom getLemmikloom(String kumbaPidi, String omanikuNimi){
         Omanik omanik = omanikRepository.findById(omanikuNimi).get();
         List<Lemmikloom> lemmikloomad = omanik.getLemmikloomad();
         Lemmikloom lemmikloom = omanik.getLemmikloomad().get(0);

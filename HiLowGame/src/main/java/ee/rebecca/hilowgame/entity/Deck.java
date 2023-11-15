@@ -1,22 +1,28 @@
-package ee.rebecca.hilowgame;
-import java.util.ArrayList;
+package ee.rebecca.hilowgame.entity;
 
 public class Deck {
 
-    private final Card[] deck;
+    //          List<Card>
+    private Card[] deck;
     private int cardsUsed;
 
 
     public Deck(){
+        deck = makeDeck();
+    }
+
+    private Card[] makeDeck() {
+        final Card[] deck;
         deck = new Card[52];
+        int i = 0;
         for (Suits suit : Suits.values()){
             for (Ranks rank: Ranks.values()){
-                for(int i=0; i<3; i++){
-                    deck[i++] = new Card(rank, suit);
-                }
+                    deck[i] = new Card(rank, suit);
+                    i++;
             }
         }
         cardsUsed = 0;
+        return deck;
     }
 
     //SHUFFLE
@@ -32,9 +38,14 @@ public class Deck {
             deck[i] = deck[index];
             deck[index] = tempDeck;
         }
+//        List<Card> shuffledDeck = new ArrayList<>(List.of(deck));
+//        Collections.shuffle(shuffledDeck);
     }
 
     public Card dealCard(){
+        if (cardsUsed == 51) {
+            deck = makeDeck();
+        }
         return deck[cardsUsed++];
     }
 }
