@@ -48,8 +48,11 @@ public class KumnevoistlusController {
             @RequestParam double sadaJooksTulemus){
         Sportlane leitudSportlane = sportlaneRepository.findById(nimi).get();
         //////
-
-
+        AlaTulemus alaTulemus = leitudSportlane.getSportlaseTulemus().getAlatulemus();
+        //Ära võta otse request parameetrist vaid võta 100 meetri jooksu aeg ja arvuta ise tulemus
+        //getSportlasetulemus vahelt ära , Spordiala entity eemaldada
+        alaTulemus.setSadaJooksTulemus(sadaJooksTulemus);
+        alaTulemusRepository.save(alaTulemus);
         return sportlaneRepository.findAll();
     }
 }
